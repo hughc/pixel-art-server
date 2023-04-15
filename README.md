@@ -1,5 +1,5 @@
 # Pixel Art Server
-This is simple server to supply images to WLED matrices of different sizes.
+This is simple server to supply images to [a matching WLED usermod](https://github.com/hughc/wled-pixelart-client) to display on matrices of different sizes.
 
 ![screen](/screenshots/screen-large.jpg)
 ![admin interface](/screenshots/admin.png)

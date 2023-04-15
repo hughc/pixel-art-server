@@ -3,3 +3,4 @@ img/**/*.png
 img/**/*.jpg
 img/**/*.gif
 .history
+data/*.json

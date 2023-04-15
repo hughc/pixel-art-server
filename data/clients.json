@@ -1,0 +1,16 @@
+[
+  {
+    "id": "16-square",
+    "name": "little grid",
+    "width": 16,
+    "height": 16,
+    "imagesetId": 2
+  },
+  {
+    "id": "WLED",
+    "name": "new test",
+    "width": 16,
+    "height": 16,
+    "imagesetId": 2
+  }
+]

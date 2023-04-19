@@ -4,7 +4,9 @@ import { getAllImageStats } from '../utils/get_image_stat.js';
 import { getImgPixelsBuffer } from '../utils/get_pixel_buffer.js';
 
 export function getImage (req, res) {
-    const { id, width = 8, height = 8 } = req.query;
+    let { id, width = 8, height = 8 } = req.query;
+    width = parseInt(width);
+    height = parseInt(height);
 
     let setup = _.findWhere(Data.clients, { id });
     if (!setup) {
@@ -42,53 +44,53 @@ export function getImage (req, res) {
     backgroundColor = backgroundColor || "#000000";
     const pixelBufferOp = getImgPixelsBuffer(path, setup, backgroundColor);
     const metadata = _.findWhere(imageStats, { id: path });
-    let pages, info;
+    let frames, info;
     console.log({ delay: metadata.delay });
     return pixelBufferOp.then((result) => {
       if (metadata?.pages > 1) {
-        pages = _.pluck(result, "data");
+        frames = _.pluck(result, "data");
         info = _.pluck(result, "info");
       } else {
-        pages = [result.data];
+        frames = [result.data];
         info = [{}];
       }
-      console.log({ pages: pages.length });
-      const frames = _.map(pages, (data, frame) => {
+      console.log({ frames: frames.length });
+      const rows = _.reduce(frames, (memo, frameData, frameIndex) => {
         // default to 15 FPS
-        const duration = metadata?.delay?.[frame] || Math.round(1000 / 15);
+        const duration = metadata?.delay?.[frameIndex] || Math.round(1000 / 15);
         console.log({ duration });
-        //data.reverse();
         var rgb = _.compact(
-          _.map(data, (dp, index) => {
+          // frameData is a linear arry of r,g,b values, starting at top left
+          _.map(frameData, (dp, index) => {
             if (index % 3)
               return;
             let r = parseInt(dp).toString(16);
             r = r.length == 2 ? r : '0' + r;
-            let g = parseInt(data[index + 1]).toString(16);
+            let g = parseInt(frameData[index + 1]).toString(16);
             g = g.length == 2 ? g : '0' + g;
-            let b = parseInt(data[index + 2]).toString(16);
+            let b = parseInt(frameData[index + 2]).toString(16);
             b = b.length == 2 ? b : '0' + b;
             return r + g + b;
           })
         );
         // console.log(rgb);
-        const pixels = [];
         let linearCount = 0;
-        for (let row = 0; row < setup.height; row++) {
-          const rowPx = [];
-          pixels.push(rowPx);
+        for (let rowIndex = 0; rowIndex < setup.height; rowIndex++) {
+          const pixels = [];
           for (let col = 0; col < setup.width; col++) {
-            rowPx.push(rgb[linearCount]);
+            pixels.push(rgb[linearCount]);
             linearCount++;
           }
+          const row = {frame: frameIndex, duration, row: rowIndex, pixels}
+          memo.push(row)
         }
-        return { pixels, duration, frame };
-      });
-      console.log(`>> server returns ${path} with ${frames.length} frames`);
+        return memo //{ rows, duration, frame: frameIndex };
+      }, []);
+      console.log(`>> server returns ${path} with ${rows.length} rows over ${frames.length} frames`);
       // add extra metadata
       duration = duration || 10;
       brightness = brightness || 25;
-      const output = { path, duration, brightness, frames };
+      const output = {meta: { path, duration, brightness, frames: frames.length, width, height}, rows };
       res.removeHeader('transfer-encoding');
       res.contentType("application/json");
       res.send(JSON.stringify(output));

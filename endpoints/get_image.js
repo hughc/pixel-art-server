@@ -90,7 +90,7 @@ export function getImage (req, res) {
       // add extra metadata
       duration = duration || 10;
       brightness = brightness || 25;
-      const output = {meta: { path, duration, brightness, frames: frames.length, width, height}, rows };
+      const output = {meta: { path, duration, brightness, backgroundColor: backgroundColor.substring(1), frames: frames.length, width, height}, rows };
       res.removeHeader('transfer-encoding');
       res.contentType("application/json");
       res.send(JSON.stringify(output));

@@ -26,6 +26,14 @@ export function returnAnImageStat(imgObj) {
       .catch((err) => console.warn(`${path}: ${err}`));
   }
 
+export function addAnImageStat(theStat) {
+    imageStatsCache.push(theStat);
+}
+export function addAnImagePath(thePath) {
+    imageDirectoryCache.push(thePath);
+}
+
+
   export function getAllImageStats() {
     if (!_.isEmpty(imageStatsCache)) return imageStatsCache;
     var images = gatherAllImages(Data.imageDirectoryPath);

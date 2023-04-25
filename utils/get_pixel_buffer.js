@@ -20,7 +20,8 @@ export function getImgPixelsBuffer(img, setup, background) {
                     ? sharp.kernel.lanczos3
                     : sharp.kernel.nearest,
               })
-              .flatten({ background })
+              .ensureAlpha()
+            //   .flatten({ background })
               .raw()
               .toBuffer({ resolveWithObject: true })
               .then({
@@ -38,7 +39,8 @@ export function getImgPixelsBuffer(img, setup, background) {
                   ? sharp.kernel.lanczos3
                   : sharp.kernel.nearest,
             })
-            .flatten({ background: background })
+            .ensureAlpha()
+            // .flatten({ background: background })
             .raw()
             .toBuffer({ resolveWithObject: true })
             .then((result) => result);

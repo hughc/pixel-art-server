@@ -62,7 +62,7 @@ export function getImage (req, res) {
         var rgb = _.compact(
           // frameData is a linear arry of r,g,b values, starting at top left
           _.map(frameData, (dp, index) => {
-            if (index % 3)
+            if (index % 4)
               return;
             let r = parseInt(dp).toString(16);
             r = r.length == 2 ? r : '0' + r;
@@ -70,7 +70,9 @@ export function getImage (req, res) {
             g = g.length == 2 ? g : '0' + g;
             let b = parseInt(frameData[index + 2]).toString(16);
             b = b.length == 2 ? b : '0' + b;
-            return r + g + b;
+            let a = parseInt(frameData[index + 3]).toString(16);
+            a = a.length == 2 ? a : '0' + a;
+            return r + g + b + a;
           })
         );
         // console.log(rgb);

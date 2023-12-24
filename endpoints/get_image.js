@@ -4,7 +4,7 @@ import { getAllImageStats } from '../utils/get_image_stat.js';
 import { getImgPixelsBuffer } from '../utils/get_pixel_buffer.js';
 
 export function getImage (req, res) {
-    let { id, width = 8, height = 8 } = req.query;
+    let { screen_id:id, width = 8, height = 8 } = req.query;
     width = parseInt(width);
     height = parseInt(height);
 

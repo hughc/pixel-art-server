@@ -87,7 +87,7 @@ app.get("/imagesets", (req, res) => {
 });
 
 // sent by client on boot
-app.get("/checkin", (req, res) => {
+app.get("/api/client/checkin", (req, res) => {
   const {width, height, pixelCount: pixels, id} = req.query;
   const params = { id, pixels, width, height};
   // only save if new
@@ -122,7 +122,7 @@ app.post("/imagesets", function (req, res) {
 
 app.delete("/imageset", deletePlaylist);
 
-app.get("/image", getImage);
+app.get("/api/image/pixels", getImage);
 
 app.get("/images", (req, res) => {
     res.send(getAllImageStats());

@@ -90,7 +90,8 @@ app.get("/imagesets", (req, res) => {
 app.get("/api/client/checkin", (req, res) => {
   const {width, height, pixelCount: pixels, id} = req.query;
   const params = { id, pixels, width, height};
-  // only save if new
+  console.warn(`client '${id}' checked in OK`);
+  // only save if new     
   saveClient(params, false);
   res.send("ok");
 });
